@@ -9,11 +9,15 @@ import io.cucumber.java.zh_cn.当;
 import io.cucumber.java.zh_cn.那么;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import lombok.SneakyThrows;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.http.HttpEntity;
@@ -62,6 +66,21 @@ public class TestSteps {
 
     @那么("打印百度为您找到的相关结果数")
     public void 打印百度为您找到的相关结果数() {
+        // 打印所有搜索结果的标题
+        try {
+            // 百度搜索结果标题通常在h3标签下，且有class="t"，但有时结构会变，尝试常见的xpath
+            List<WebElement> titleElements = getWebDriver().findElements(xpath("/html/body/div[3]/div[4]/div[1]/div[3]/div[4]/div/div/div/h3/a/span"));
+            if (titleElements.isEmpty()) {
+                System.out.println("未找到搜索结果标题");
+            } else {
+                for (var element : titleElements) {
+                    System.out.println(element.getText());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("打印搜索结果标题时出错");
+        }
     }
 
     @假如("存在用户名为{string}和密码为{string}的用户")
@@ -107,7 +126,15 @@ public class TestSteps {
     }
 
     @当("在百度搜索关键字{string}")
-    public void 在百度搜索关键字(String arg0) {
+    public void 在百度搜索关键字(String arg0) throws InterruptedException {
+        // 打开百度首页
+        getWebDriver().get("https://www.baidu.com");
+        // 输入搜索词
+        getWebDriver().findElement(xpath("//input[@id='kw']")).sendKeys(arg0);
+        // 点击搜索按钮
+        getWebDriver().findElement(xpath("//input[@id='su']")).click();
+
+        TimeUnit.SECONDS.sleep(5L);
     }
 
     private WebDriver getWebDriver() {
