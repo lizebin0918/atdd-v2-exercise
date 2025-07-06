@@ -134,6 +134,7 @@ public class TestSteps {
         // 点击搜索按钮
         getWebDriver().findElement(xpath("//input[@id='su']")).click();
 
+        // getWebDriver().wait();
         TimeUnit.SECONDS.sleep(5L);
     }
 
