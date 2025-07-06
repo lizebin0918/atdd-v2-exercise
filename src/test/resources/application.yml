@@ -19,6 +19,11 @@ spring:
 
 logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 
+logging:
+  level:
+    org.hibernate.SQL: trace        # 打印SQL
+    org.hibernate.orm.jdbc.bind: trace  # 打印参数绑定
+
 mock-server:
   endpoint: http://mock-server.tool.net:9081
 
